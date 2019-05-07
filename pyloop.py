@@ -5,16 +5,15 @@ import threading,requests, time
 #
 import pyaudio
 import wave
+
+#
+k=2
+pygame.init() 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-RECORD_SECONDS = 5
-WAVE_OUTPUT_FILENAME = "1.wav"
-p = pyaudio.PyAudio()
-#
-pygame.init() 
-
+RECORD_SECONDS = 1
 WHITE = (255, 255, 255) 
 font = pygame.font.SysFont("comicsansms", 72) 
 text = font.render("MP", True, (0, 128, 0)) 
@@ -33,9 +32,6 @@ f4 = pygame.mixer.Sound('1.wav')
 g4 = pygame.mixer.Sound('1.wav') 
 a4 = pygame.mixer.Sound('1.wav') 
 b4 = pygame.mixer.Sound('1.wav') 
- 
- 
- 
 f5 = pygame.mixer.Sound('1.wav') 
 g5 = pygame.mixer.Sound('1.wav') 
 a5 = pygame.mixer.Sound('1.wav') 
@@ -51,16 +47,16 @@ def loop_b():
          d5.play() 
 def loop_c():
     while 1: 
-        e5.play() 
+        e5.play()
+
+        
 t1 = threading.Thread(target=loop_a)
 t1.daemon = True 
-
-
 t2 = threading.Thread(target=loop_b)
 t2.daemon = True 
-
 t3 = threading.Thread(target=loop_c)
 t3.daemon = True 
+
     
 while run: 
     for event in pygame.event.get(): 
@@ -69,24 +65,21 @@ while run:
                 run = False 
 
             elif event.key == pygame.K_u: #u
-              
+                j=k
+                WAVE_OUTPUT_FILENAME = str(j)+".wav"
+                p = pyaudio.PyAudio()
                 stream = p.open(format=FORMAT,channels=CHANNELS,rate=RATE,input=True,frames_per_buffer=CHUNK)
 
-
                 print("Start to record the audio.")
-
                 frames = []
-
                 for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
                     data = stream.read(CHUNK)
                     frames.append(data)
-
                 print("Recording is finished.")
 
                 stream.stop_stream()
                 stream.close()
                 p.terminate()
-
                 wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
                 wf.setnchannels(CHANNELS)
                 wf.setsampwidth(p.get_sample_size(FORMAT))
@@ -94,7 +87,8 @@ while run:
                 wf.writeframes(b''.join(frames))
                 wf.close()
                 #c4.play()
-
+                k=k+1
+                print(k)
             elif event.key == pygame.K_y: 
                 d4.play() 
 
